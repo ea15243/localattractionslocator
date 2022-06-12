@@ -1,4 +1,5 @@
 let weatherAPIkey = "db3e74234e90b3ab070f5a919843e508";
+let countriesAPIkey = "328d5a3aaa25e85506ef8faa8dbdf791";
 
 let city_search_input = document.querySelector("#city_search");
 let search_btn = document.querySelector("#search_btn");
@@ -10,12 +11,18 @@ city_search_input.addEventListener("change", (e) => {
   city = value;
 });
 
-search_btn.addEventListener("click", () => {
-  fetch(
+search_btn.addEventListener("click", async () => {
+  let respond = await fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherAPIkey}`
+  );
+  let data = await respond.json();
+  render(data);
+  let country = data.sys.country;
+  fetch(
+    `http://api.countrylayer.com/v2/alpha/${country}?access_key=${countriesAPIkey}`
   )
     .then((respond) => respond.json())
-    .then((data) => render(data));
+    .then((data) => console.log(data));
 });
 
 function render(data) {
