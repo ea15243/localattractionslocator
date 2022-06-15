@@ -13,21 +13,34 @@ city_search_input.addEventListener("change", (e) => {
 
 search_btn.addEventListener("click", async () => {
   let respond = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherAPIkey}`
+    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherAPIkey}&units=imperial`
   );
   let data = await respond.json();
-  render(data);
+
   let country = data.sys.country;
   fetch(
     `http://api.countrylayer.com/v2/alpha/${country}?access_key=${countriesAPIkey}`
   )
     .then((respond) => respond.json())
-    .then((data) => console.log(data));
+    .then((city_data) => {
+      console.log(city_data);
+      render(data, city_data);
+    });
 });
 
-function render(data) {
+function render(data, city) {
   let result = document.querySelector("#result");
-  result.innerText = JSON.stringify(data, null, "  ");
+  result.innerHTML = `
+  <div class='box'>
+    <div class="weathercon"></div>
+    <div class="info">
+      <h2 class="location">${data.name}</h2>
+      <p class="date">${city.name} | ${city.region}</p>
+      <h1 class="temp">${data.main.temp_min} &deg;F | ${data.main.temp_max} &deg;F</h1>
+    </div>
+  </div>
+`;
+  //result.innerText = JSON.stringify(data, null, "  ");
 }
 
 //innerText vs innerHTML diferences
