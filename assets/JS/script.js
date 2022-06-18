@@ -5,6 +5,7 @@ let city_search_input = document.querySelector("#city_search");
 let search_btn = document.querySelector("#search_btn");
 
 let city = "";
+let resultList = document.querySelector("#places");
 
 city_search_input.addEventListener("change", (e) => {
   let value = e.target.value;
@@ -31,25 +32,41 @@ search_btn.addEventListener("click", async () => {
       console.log(city_data);
       render(data, city_data);
     });
-  let url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/radius?";
+
   const options = {
     method: "GET",
-    url: "https://opentripmap-places-v1.p.rapidapi.com/en/places/radius",
-    params: { radius: "500", lon: "38.364285", lat: "59.855685" },
     headers: {
       "X-RapidAPI-Key": "b46d25f85fmsh2f7a49052766833p146f44jsn3eb88f65d627",
       "X-RapidAPI-Host": "opentripmap-places-v1.p.rapidapi.com",
     },
   };
-  fetch(options)
-    .then((respond) => respond.json())
-    .then((city_data) => {
-      console.log(city_data);
-    });
+
+  fetch(
+    `https://opentripmap-places-v1.p.rapidapi.com/en/places/radius?radius=500&lon=${long}&lat=${lat}`,
+    options
+  )
+    .then((response) => response.json())
+    .then((response) => {
+      resultList.innerHTML = "";
+      for (let item of response.features) {
+        let data = item.properties;
+        let $li = document.createElement("li");
+        $li.classList.add("card");
+        let $h3 = document.createElement("h3");
+        $h3.textContent = data.name;
+        let $p = document.createElement("p");
+        $p.textContent = "Distance: " + data.dist;
+        $li.appendChild($h3);
+        $li.appendChild($p);
+        resultList.appendChild($li);
+      }
+    })
+    .catch((err) => console.error(err));
 });
 
 function render(data, city) {
   let result = document.querySelector("#result");
+  result.classList.remove("fade");
   result.innerHTML = `
   <div class='box'>
     <div class="weathercon"></div>
