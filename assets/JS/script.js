@@ -25,7 +25,7 @@ search_btn.addEventListener("click", async () => {
   let long = data.coord.lon;
   let country = data.sys.country;
   fetch(
-    `https://api.countrylayer.com/v2/alpha/${country}?access_key=${countriesAPIkey}`
+    `http://api.countrylayer.com/v2/alpha/${country}?access_key=${countriesAPIkey}`
   )
     .then((respond) => respond.json())
     .then((city_data) => {
