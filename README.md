@@ -1,4 +1,4 @@
-# project01 Tourism App
+# project01 Local Attraction Locator App
 
 When a User Enters a Given City then they are displayed the weather and local attractions.
 
